@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 '''
-Created on 2012-05-25 14:38
+Created on 2016-06-19 14:38
 @summary: a python docstring plugin for sublime text 2
-@author: JerryKwan
-@contact: Jinzhong.Guan@gmail.com
+@author: zhanghuangbin
+@contact: zhb_bupt@163.com
 '''
 
 
@@ -21,8 +21,8 @@ def construct_module_docstring():
     docstring = "# -*- coding: utf-8 -*-\n"
     docstring += "'''\n"
     docstring += "Created on %s\n"
-    docstring += "@summary: \n"
-    docstring += "@author: %s\n"
+    docstring += "summary: \n"
+    docstring += "author: zhbbupt"
     docstring += "'''\n\n"
     docstring = docstring % (datetime.datetime.now().strftime("%Y-%m-%d %H:%M"), getpass.getuser())
     return docstring
@@ -38,18 +38,24 @@ def construct_docstring(declaration, indent = 0):
     try:
         typename, name, params = declaration
         lines = []
-        lines.append("'''\n")
-        lines.append("@summary: \n")
-        # lines.append("\n")
+        lines.append('"""\n')
+        lines.append("Summary: TODO\n")
+        lines.append("\n")
         if typename == "class":
-            pass
-        elif typename == "def":
+            lines.append("Parents:\n")
             if len(params):
                 for param in params:
-                    lines.append("@param %s:\n"%(param))
-                # lines.append("\n")
-            lines.append("@result: \n")
-        lines.append("'''\n")
+                    lines.append("\t%s (TYPE) : Description\n"%(param))
+                lines.append("\n")
+        elif typename == "def":
+            lines.append("Args:\n")
+            if len(params):
+                for param in params:
+                    lines.append("\t%s (TYPE) : Description\n"%(param))
+                lines.append("\n")
+            lines.append("Returns: \n")
+            lines.append("\tTYPE : Description\n")
+        lines.append('"""\n')
 
         for line in lines:
             docstring += " " * indent + line
@@ -287,6 +293,3 @@ class DocstringCommand(sublime_plugin.TextCommand):
                         self.view.insert(edit, declaration_region.end() + 2, docstring)
                     except Exception as e:
                         print(e)
-
-
-
